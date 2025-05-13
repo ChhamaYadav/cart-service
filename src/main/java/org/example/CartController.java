@@ -12,12 +12,11 @@ public class CartController {
 
     private final CartService cartService;
 
-
     public CartController(CartService cartService) {
         this.cartService = cartService;
     }
     // Request classes
-    public record CartItemRequest(Long userId, Long productId, String productName, Double price, String imageUrl, int quantity) {}
+    public record CartItemRequest(Long userId, Long productId, String productName, double price, String imageUrl, int quantity) {}
     public record UpdateRequest(Long userId, Long productId, int quantity) {}
 
     @PostMapping("/add")
@@ -30,6 +29,7 @@ public class CartController {
                 request.quantity()
         );
         cartService.addToCart(request.userId(),item);
+        System.out.println("add to cart request hit");
         return ResponseEntity.ok().build();
     }
 
