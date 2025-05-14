@@ -60,7 +60,12 @@ public class CartService {
     public void updateItemQuantity(Long userId, Long productId, int quantity) {
         Cart cart = cartRepository.findById(userId).orElse(null);
         if (cart == null) return;
-        cart.getItem().removeIf(item -> item.getProductId().equals(productId));
+       for(CartItems item: cart.getItem()){
+           if(item.getProductId().equals(productId)){
+               item.setQuantity(quantity);
+               break;
+           }
+       }
         cartRepository.save(cart);
     }
 

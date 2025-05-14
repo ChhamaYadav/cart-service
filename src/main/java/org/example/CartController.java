@@ -39,14 +39,17 @@ public class CartController {
         return  ResponseEntity.ok(cartService.getCartCount(userId));
     }
 
+    //Details fo the products visible
     @GetMapping("/details/{userId}")
     public ResponseEntity<Map<String,Object>> getCartDetails(@PathVariable Long userId){
+        System.out.println("Details API endpoints hit");
         return ResponseEntity.ok(cartService.getCartDetails(userId));
     }
 
     @PutMapping("/update-item")
     public ResponseEntity<Void> updateItem(@RequestBody UpdateRequest request){
         cartService.updateItemQuantity(request.userId(), request.productId(), request.quantity());
+        System.out.println("update endpoint called");
         return  ResponseEntity.ok().build();
     }
 
