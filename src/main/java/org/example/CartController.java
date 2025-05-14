@@ -33,8 +33,9 @@ public class CartController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/count/{userid}")
+    @GetMapping("/count/{userId}")
     public ResponseEntity<Integer> getCartCount(@PathVariable Long userId){
+        System.out.println("getCartCount API hit");
         return  ResponseEntity.ok(cartService.getCartCount(userId));
     }
 
