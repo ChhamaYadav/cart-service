@@ -56,6 +56,7 @@ public class CartController {
     @DeleteMapping("/remove-item")
     public ResponseEntity<Void> removeItem(@RequestBody UpdateRequest request){
        cartService.removeItem(request.userId(), request.productId());
+       System.out.println("Delete API endpoint called");
        return ResponseEntity.ok().build();
     }
 

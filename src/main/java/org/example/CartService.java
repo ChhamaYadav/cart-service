@@ -31,7 +31,7 @@ public class CartService {
 
     public int getCartCount(Long userId) {
         return cartRepository.findById(userId)
-                .map(c -> c.getItem().stream().mapToInt(CartItems::getQuantity).sum())
+                .map(c -> c.getItem().size())
                 .orElse(0);
     }
 
