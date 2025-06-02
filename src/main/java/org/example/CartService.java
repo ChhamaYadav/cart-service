@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 public class CartService {
@@ -16,6 +17,10 @@ public class CartService {
     }
 
     public void addToCart(Long userId, CartItems cartItems) {
+        if (userId == null) {
+            throw new IllegalArgumentException("User ID must not be null for logged-in cart operations.");
+        }
+
         Cart cart = cartRepository.findById(userId).orElse(new Cart(userId, new ArrayList<>()));
 
         Optional<CartItems> existing = cart.getItem().stream()
@@ -27,6 +32,7 @@ public class CartService {
             cart.getItem().add(cartItems);
         }
         cartRepository.save(cart);
+        System.out.println("Cart saved!");
     }
 
     public int getCartCount(Long userId) {
@@ -79,6 +85,7 @@ public class CartService {
     public void clearCart(Long userId){
         cartRepository.deleteById(userId);
     }
+
 
 
 }

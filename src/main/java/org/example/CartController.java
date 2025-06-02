@@ -1,8 +1,11 @@
 package org.example;
 
 import org.apache.coyote.Response;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import java.util.Map;
 
@@ -12,6 +15,9 @@ public class CartController {
 
     private final CartService cartService;
 
+    @Autowired
+    private GuestCartService guestCartService;
+
     public CartController(CartService cartService) {
         this.cartService = cartService;
     }
@@ -20,7 +26,7 @@ public class CartController {
     public record UpdateRequest(Long userId, Long productId, int quantity) {}
 
     @PostMapping("/add")
-    public ResponseEntity<Void> addToCart(@RequestBody CartItemRequest request){
+    public ResponseEntity<Void> addToCart(@RequestBody CartItemRequest request, HttpServletRequest httpRequest){
         CartItems item=new CartItems(
                 request.productId(),
                 request.productName(),
@@ -28,8 +34,17 @@ public class CartController {
                 request.imageUrl(),
                 request.quantity()
         );
-        cartService.addToCart(request.userId(),item);
-        System.out.println("add to cart request hit");
+        if(request.userId()!=null){
+            //Logged-in user
+            cartService.addToCart(request.userId(),item);
+            System.out.println("Item added to logged in user's cart");
+        }else{
+            //Guest user use session
+            HttpSession session=httpRequest.getSession(true);//create if not exists
+            String sessionId=session.getId();
+            guestCartService.addToGuestCart(sessionId,item);
+            System.out.println("Item added to guest user's cart with sessionId = " + sessionId);
+        }
         return ResponseEntity.ok().build();
     }
 
